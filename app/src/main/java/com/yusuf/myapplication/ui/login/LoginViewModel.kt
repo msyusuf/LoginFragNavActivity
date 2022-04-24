@@ -28,20 +28,26 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         // can be launched in a separate asynchronous job
         Log.i(LOG_TAG, "In LoginViewModel, calling login to insert user in LoginRepository. ")
         viewModelScope.launch {
-            val user: LoggedInUser = LoggedInUser(0, "dummyUser", "dummyPassword", "NoToken")
+            val user: LoggedInUser = LoggedInUser(0, username, password, "NoToken")
             loginRepository.login(user)
         }
 
     }
 
     fun loginDataChanged(username: String, password: String) {
-        Log.i(LOG_TAG, "In LoginViewModel, loginDataChanged. ")
+
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+//            Log.i(LOG_TAG,
+//                "In LoginViewModel,loginDataChanged(), Username: ${username} is not valid.")
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+//            Log.i(LOG_TAG,
+//                "In LoginViewModel,loginDataChanged(), Password: ${password} is not valid.")
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
+//            Log.i(LOG_TAG,
+//                "In LoginViewModel,loginDataChanged(), username and password are valid. Username: ${username} Password: ${password}.")
         }
     }
 
@@ -57,5 +63,14 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    fun getUserCount(): Int {
+        var count: Int = 0
+        viewModelScope.launch {
+            count = loginRepository.getUserCount()
+        }
+        Log.i(LOG_TAG, "In LoginViewModel.getUserCount(): count = $count")
+        return count
     }
 }

@@ -38,6 +38,10 @@ class LoginRepository(val loginDao: LoginDao) {
 
     val allUsers: Flow<List<LoggedInUser>> = loginDao.getAllUsers()
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getUserCount(): Int = loginDao.getLoggedInUserCount()
+
     // TODO Remove the try/Catches after testing.
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -58,6 +62,7 @@ class LoginRepository(val loginDao: LoginDao) {
 
     suspend fun login(user: LoggedInUser) {
         // handle login
+        Log.i(LOG_TAG, "******** Login Repository, calling loginDao( ${user}).")
         loginDao.insert(user)
     }
 

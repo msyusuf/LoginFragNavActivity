@@ -62,6 +62,7 @@ abstract class LoginDatabase : RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 Log.i(LOG_TAG, "Inside LoginDatabase, onCreate")
+
                 // If you want to keep the data through app restarts,
                 // comment out the following line.
                 try {
